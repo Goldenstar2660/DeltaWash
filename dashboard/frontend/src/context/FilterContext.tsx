@@ -3,7 +3,7 @@
  * 
  * Provides centralized state management for date range, unit, shift, and quality filters.
  */
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { FilterState } from '../types/analytics';
 
 interface FilterContextType {

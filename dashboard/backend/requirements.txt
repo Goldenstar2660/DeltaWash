@@ -27,6 +27,7 @@ httpx==0.26.0
 # Data Generation for Demo
 faker==22.1.0
 numpy==1.26.3
+opencv-python-headless==4.9.0.80
 
 # CORS
 python-multipart==0.0.6

@@ -11,6 +11,7 @@ import { useFilters } from '../context/FilterContext';
 import { DeviceStatusCard } from '../components/DeviceStatusCard';
 import { ReliabilityFlags } from '../components/ReliabilityFlags';
 import { MetricCard } from '../components/common/MetricCard';
+import api from '../services/api';
 import './DevicePage.css';
 
 export const DevicePage: React.FC = () => {
@@ -21,6 +22,14 @@ export const DevicePage: React.FC = () => {
   // Convert dates to ISO strings for API
   const dateFrom = filters.dateFrom.toISOString().split('T')[0];
   const dateTo = filters.dateTo.toISOString().split('T')[0];
+
+  const handleSimulate = async (label: string) => {
+    try {
+      await api.post('/live/update', { label });
+    } catch (e) {
+      console.error("Failed to update state", e);
+    }
+  };
 
   // Fetch device detail
   const {
@@ -100,6 +109,38 @@ export const DevicePage: React.FC = () => {
         {/* Reliability Flags */}
         <div className="content-section">
           <ReliabilityFlags flags={analytics.reliability_flags} />
+        </div>
+
+        {/* Live View */}
+        <div className="content-section">
+          <h2 className="section-title">Live View</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', background: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+            <img 
+                src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/live/stream`}
+                alt="Live Wash Visualization"
+                style={{ maxWidth: '100%', maxHeight: '400px', border: '1px solid #eee', borderRadius: '4px' }} 
+            />
+            <div className="simulation-controls" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {['palm', 'dorsum', 'thumbs', 'fingertips', 'interlaced', 'interlocked'].map(label => (
+                  <button 
+                    key={label}
+                    onClick={() => handleSimulate(label)}
+                    style={{ padding: '0.5rem 1rem', cursor: 'pointer', borderRadius: '4px', border: '1px solid #ccc', background: '#f8f9fa' }}
+                  >
+                    {label.charAt(0).toUpperCase() + label.slice(1)}
+                  </button>
+                ))}
+                <button 
+                  onClick={() => handleSimulate('background')} 
+                  style={{ padding: '0.5rem 1rem', cursor: 'pointer', borderRadius: '4px', border: '1px solid #dc3545', background: '#dc3545', color: 'white' }}
+                >
+                  Reset (Wait 5s)
+                </button>
+            </div>
+            <p style={{ fontSize: '0.8rem', color: '#666' }}>
+              Click buttons to simulate detection. Reset clears after 5s of "background".
+            </p>
+          </div>
         </div>
 
         {/* Performance Metrics */}

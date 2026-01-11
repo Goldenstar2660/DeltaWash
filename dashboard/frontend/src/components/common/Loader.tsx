@@ -1,7 +1,6 @@
 /**
  * Loader component with spinner animation.
  */
-import React from 'react';
 
 export function Loader() {
   return (

@@ -125,7 +125,7 @@ def generate_units(db: Session, num_units: int = 8) -> List[Tuple[uuid.UUID, str
     units_to_create = DEMO_UNITS[:min(num_units, len(DEMO_UNITS))]
     
     for unit_name, unit_code in units_to_create:
-        unit_id = uuid.uuid4()
+        unit_id = uuid.UUID(int=random.getrandbits(128))
         unit = Unit(
             id=unit_id,
             unit_name=unit_name,
@@ -166,7 +166,7 @@ def generate_devices(
         count = devices_per_unit + (1 if idx < remaining_devices else 0)
         
         for device_num in range(1, count + 1):
-            device_id = uuid.uuid4()
+            device_id = uuid.UUID(int=random.getrandbits(128))
             device_name = f"Device-{idx + 1:02d}-{device_num:02d}"
             
             # Assign firmware version with weighted distribution (newer versions more common)
@@ -364,7 +364,7 @@ def generate_sessions(
                 duration_ms = random.randint(30000, 60000)  # Placeholder
                 
                 session = {
-                    "id": uuid.uuid4(),
+                    "id": uuid.UUID(int=random.getrandbits(128)),
                     "device_id": device_id,
                     "timestamp": timestamp,
                     "duration_ms": duration_ms,
@@ -443,7 +443,7 @@ def generate_steps(
                 confidence_score = np.random.uniform(0.3, 0.7)
             
             step = {
-                "id": uuid.uuid4(),
+                "id": uuid.UUID(int=random.getrandbits(128)),
                 "session_id": session["id"],
                 "step_id": step_id,
                 "duration_ms": duration_ms,
@@ -525,7 +525,7 @@ def generate_heartbeats(
             online_status = not in_offline_period
             
             heartbeat = {
-                "id": uuid.uuid4(),
+                "id": uuid.UUID(int=random.getrandbits(128)),
                 "device_id": device_id,
                 "timestamp": current_time,
                 "firmware_version": firmware_version,
