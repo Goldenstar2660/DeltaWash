@@ -2,7 +2,7 @@
 
 This guide will help you deploy your dashboard with:
 - **Frontend** → Vercel (free) + your .tech domain
-- **Backend** → Railway (free tier) with PostgreSQL database
+- **Backend** → Render (free tier) with PostgreSQL database
 
 ---
 
@@ -14,70 +14,84 @@ This guide will help you deploy your dashboard with:
 
 ---
 
-## Part 1: Deploy Backend to Railway (15 min)
+## Part 1: Deploy Backend to Render (15 min)
 
-Railway offers a free tier with $5/month credit - enough for a small app.
+Render offers a free tier perfect for small projects.
 
-### Step 1: Create Railway Account
+### Step 1: Create Render Account
 
-1. Go to [railway.app](https://railway.app)
-2. Click **"Login"** → **"Login with GitHub"**
-3. Authorize Railway to access your GitHub
+1. Go to [render.com](https://render.com)
+2. Click **"Get Started for Free"**
+3. Select **"GitHub"** to sign up with your GitHub account
+4. Authorize Render to access your GitHub
 
-### Step 2: Create a New Project
+### Step 2: Create PostgreSQL Database First
 
-1. Click **"New Project"** on the dashboard
-2. Select **"Deploy from GitHub repo"**
-3. If this is your first time, click **"Configure GitHub App"** to give Railway access to your repos
-4. Select your `handwash` repository
+1. From the Render dashboard, click **"New +"** button
+2. Select **"PostgreSQL"**
+3. Fill in the details:
+   - **Name**: `handwash-db`
+   - **Database**: `handwash`
+   - **User**: Leave as default
+   - **Region**: Choose closest to you (e.g., Oregon for US West)
+   - **PostgreSQL Version**: 15
+   - **Instance Type**: Select **"Free"**
+4. Click **"Create Database"**
+5. Wait for it to be created (1-2 minutes)
+6. Once ready, find the **"Internal Database URL"** - you'll need this later (it starts with `postgres://`)
 
-### Step 3: Set Up the Backend Service
+### Step 3: Create the Backend Web Service
 
-1. After selecting the repo, Railway will detect your project
-2. Click on the service card that appears
-3. Go to **Settings** tab:
-   - Set **Root Directory** to: `dashboard/backend`
-   - Set **Start Command** to: `alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port $PORT`
+1. Click **"New +"** → **"Web Service"**
+2. Select **"Build and deploy from a Git repository"** → **"Next"**
+3. Connect your GitHub repo:
+   - Find and click **"Connect"** next to `DeltaWash` (or your repo name)
+4. Configure the service:
 
-### Step 4: Add PostgreSQL Database
+| Setting | Value |
+|---------|-------|
+| **Name** | `handwash-api` |
+| **Region** | Same as your database |
+| **Branch** | `clean-main` (or your main branch) |
+| **Root Directory** | `dashboard/backend` |
+| **Runtime** | `Python 3` |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port $PORT` |
+| **Instance Type** | **Free** |
 
-1. Click **"+ New"** in your project
-2. Select **"Database"** → **"Add PostgreSQL"**
-3. Railway will automatically create a PostgreSQL database
+### Step 4: Add Environment Variables
 
-### Step 5: Configure Environment Variables
+1. Scroll down to **"Environment Variables"**
+2. Click **"Add Environment Variable"** for each:
 
-1. Click on your backend service
-2. Go to **Variables** tab
-3. Click **"+ New Variable"** and add these:
-
-| Variable | Value |
-|----------|-------|
-| `DATABASE_URL` | Click **"Add Reference"** → Select your PostgreSQL → Choose `DATABASE_URL` |
-| `JWT_SECRET` | Generate a random 32+ character string (use: `openssl rand -hex 32` in terminal) |
+| Key | Value |
+|-----|-------|
+| `DATABASE_URL` | Paste the **Internal Database URL** from Step 2 |
+| `JWT_SECRET` | Generate with: `openssl rand -hex 32` in your terminal |
 | `JWT_ALGORITHM` | `HS256` |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` |
-| `CORS_ORIGINS` | `https://yourdomain.tech,https://www.yourdomain.tech` (replace with your actual domain) |
+| `CORS_ORIGINS` | `https://yourdomain.tech,https://www.yourdomain.tech` |
+| `PYTHON_VERSION` | `3.11.7` |
 
-### Step 6: Deploy
+### Step 5: Deploy
 
-1. Railway should automatically deploy when you add variables
-2. Wait for the build to complete (2-3 minutes)
-3. Once deployed, click **"Settings"** → **"Networking"**
-4. Click **"Generate Domain"** to get your backend URL
-5. **Copy this URL!** You'll need it for the frontend (e.g., `https://handwash-backend-production.up.railway.app`)
+1. Click **"Create Web Service"**
+2. Render will start building and deploying (3-5 minutes)
+3. Watch the logs - it should say "Uvicorn running on..."
+4. Your backend URL appears at the top (e.g., `https://handwash-api.onrender.com`)
+5. **Copy this URL!** You'll need it for the frontend
 
-### Step 7: Seed Demo Data (Optional)
+### Step 6: Seed Demo Data (Optional)
 
 If you want demo data in your dashboard:
-1. In Railway, click on your backend service
-2. Go to **"Settings"** → **"Service"**
-3. Temporarily change the start command to:
-   ```
-   alembic upgrade head && python -m src.scripts.seed_demo_data && uvicorn src.main:app --host 0.0.0.0 --port $PORT
-   ```
-4. Click **"Deploy"** to redeploy
-5. After deployment succeeds, change the command back to the original (remove the seed script part)
+1. Go to your web service on Render
+2. Click **"Shell"** tab (or use the "Manual Deploy" → Run in shell)
+3. Run: `python -m src.scripts.seed_demo_data`
+4. This adds sample data to test with
+
+### ⚠️ Important Note About Free Tier
+
+Render's free tier spins down after 15 minutes of inactivity. First request after sleep takes ~30 seconds. This is normal for free tier!
 
 ---
 
@@ -106,7 +120,7 @@ If you want demo data in your dashboard:
 
 | Name | Value |
 |------|-------|
-| `VITE_API_BASE_URL` | Your Railway backend URL from Part 1 (e.g., `https://handwash-backend-production.up.railway.app`) |
+| `VITE_API_BASE_URL` | Your Render backend URL from Part 1 (e.g., `https://handwash-api.onrender.com`) |
 
 ### Step 4: Deploy
 
@@ -160,18 +174,18 @@ Add these records at your domain registrar:
 
 After you have your domain set up, update the backend to accept requests from it:
 
-1. Go to Railway → Your backend service → **Variables**
+1. Go to Render → Your web service → **"Environment"** tab
 2. Update `CORS_ORIGINS` to include your new domain:
    ```
    https://yourdomain.tech,https://www.yourdomain.tech
    ```
-3. Railway will automatically redeploy
+3. Click **"Save Changes"** - Render will automatically redeploy
 
 ---
 
 ## ✅ Final Checklist
 
-- [ ] Backend deployed on Railway
+- [ ] Backend deployed on Render
 - [ ] PostgreSQL database connected
 - [ ] Frontend deployed on Vercel
 - [ ] .tech domain connected
@@ -193,20 +207,26 @@ After you have your domain set up, update the backend to accept requests from it
 ## 🔧 Troubleshooting
 
 ### "Failed to fetch" or CORS errors
-- Check that `CORS_ORIGINS` in Railway includes your exact domain with `https://`
+- Check that `CORS_ORIGINS` in Render includes your exact domain with `https://`
 - Make sure `VITE_API_BASE_URL` in Vercel doesn't have a trailing slash
 
 ### Backend not starting
-- Check Railway logs: Click on service → "Logs" tab
+- Check Render logs: Click on service → **"Logs"** tab
 - Make sure all environment variables are set correctly
+- Verify DATABASE_URL is the **Internal** Database URL
+
+### First load is slow
+- Render free tier sleeps after 15 min of inactivity
+- First request wakes it up (~30 seconds)
+- This is normal for free tier!
 
 ### Domain not working
 - DNS can take up to 48 hours (usually 10-30 mins)
 - Verify DNS with: `nslookup yourdomain.tech`
 
 ### Database connection errors
-- Make sure you clicked "Add Reference" for DATABASE_URL, not typed it manually
-- Check PostgreSQL service is running in Railway
+- Use **Internal Database URL** (not External) for the backend
+- Check PostgreSQL is running in Render dashboard
 
 ---
 
@@ -215,8 +235,8 @@ After you have your domain set up, update the backend to accept requests from it
 | Service | Cost |
 |---------|------|
 | Vercel Frontend | **Free** (hobby tier) |
-| Railway Backend | **Free** ($5 credit/month) |
-| Railway PostgreSQL | **Free** (included in $5 credit) |
+| Render Backend | **Free** (750 hours/month) |
+| Render PostgreSQL | **Free** (90 days, then $7/month) |
 | .tech Domain | Whatever you paid |
 | **Total Monthly** | **$0** (within free tier limits) |
 
@@ -226,7 +246,7 @@ After you have your domain set up, update the backend to accept requests from it
 
 When you push code to GitHub:
 - **Frontend**: Vercel auto-deploys on every push
-- **Backend**: Railway auto-deploys on every push
+- **Backend**: Render auto-deploys on every push
 
 No manual action needed!
 
@@ -235,5 +255,5 @@ No manual action needed!
 ## 📞 Need Help?
 
 - Vercel Docs: https://vercel.com/docs
-- Railway Docs: https://docs.railway.app
+- Render Docs: https://render.com/docs
 - Check the logs in each platform for error details
