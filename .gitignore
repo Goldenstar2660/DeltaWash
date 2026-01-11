@@ -128,3 +128,4 @@ pytest.ini
 test_cam.py
 .specify/
 specs/
+training_data_old/
