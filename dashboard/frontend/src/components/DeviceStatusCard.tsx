@@ -5,7 +5,7 @@
  * and uptime percentage. TailAdmin-styled design.
  */
 import React from 'react';
-import { DeviceStatus } from '../../types/device';
+import { DeviceStatus } from '../types/device';
 
 interface DeviceStatusCardProps {
   status: DeviceStatus;

@@ -2,7 +2,6 @@
  * ErrorMessage component for displaying errors with retry option.
  * TailAdmin-styled alert component with icon and action.
  */
-import React from 'react';
 
 interface ErrorMessageProps {
   message: string;

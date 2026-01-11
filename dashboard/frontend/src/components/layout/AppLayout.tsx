@@ -115,10 +115,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <NavLink 
                   to="/" 
                   className="nav-link"
-                  onClick={(e) => {
-                    // This link is handled by the Overview page metrics
-                    // It's here for navigation structure
-                  }}
                 >
                   <span className="nav-icon">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,13 +124,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   {!sidebarCollapsed && <span className="nav-text">Units</span>}
                 </NavLink>
               </li>
-              <li>
-                <NavLink 
-                  to="/" 
-                  className="nav-link"
-                >
-                  <span className="nav-icon">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <li>
+                              <NavLink 
+                                to="/devices/47378190-96da-1dac-72ff-5d2a386ecbe0"
+                                className="nav-link"
+                              >
+                                <span className="nav-icon">                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M6.66666 2.5V5M13.3333 2.5V5M2.91666 8.5H17.0833M4.16666 3.75H15.8333C16.7538 3.75 17.5 4.49619 17.5 5.41667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16666C3.24619 17.5 2.5 16.7538 2.5 15.8333V5.41667C2.5 4.49619 3.24619 3.75 4.16666 3.75Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       <rect x="5" y="10.8333" width="3.33333" height="3.33333" rx="0.5" stroke="currentColor" strokeWidth="1.5"/>
                     </svg>

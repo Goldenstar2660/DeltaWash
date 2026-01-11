@@ -5,7 +5,7 @@
  * TailAdmin-styled design matching admin dashboard patterns.
  */
 import React from 'react';
-import { ReliabilityFlag } from '../../types/device';
+import { ReliabilityFlag } from '../types/device';
 
 interface ReliabilityFlagsProps {
   flags: ReliabilityFlag[];
