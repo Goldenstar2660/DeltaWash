@@ -1,8 +1,8 @@
-# 🚀 Deployment Guide: Handwash Dashboard
+# Deployment Guide: Handwash Dashboard
 
 This guide will help you deploy your dashboard with:
-- **Frontend** → Vercel (free) + your .tech domain
-- **Backend** → Render (free tier) with PostgreSQL database
+- **Frontend** -> Static hosting provider of your choice
+- **Backend** -> Render (free tier) with PostgreSQL database
 
 ---
 
@@ -95,78 +95,35 @@ Render's free tier spins down after 15 minutes of inactivity. First request afte
 
 ---
 
-## Part 2: Deploy Frontend to Vercel (10 min)
+## Part 2: Deploy Frontend (provider-specific)
 
-### Step 1: Create Vercel Account
+This project uses a Vite frontend located in `dashboard/frontend`.
 
-1. Go to [vercel.com](https://vercel.com)
-2. Click **"Sign Up"** → **"Continue with GitHub"**
-3. Authorize Vercel to access your GitHub
+### Step 1: Build the frontend
 
-### Step 2: Import Your Project
+1. From `dashboard/frontend`, run:
+   - `npm install`
+   - `npm run build`
+2. The build output is in `dist/`.
 
-1. Click **"Add New..."** → **"Project"**
-2. Find your `handwash` repository and click **"Import"**
-3. Configure the project:
-   - **Framework Preset**: Vite
-   - **Root Directory**: Click **"Edit"** → Enter `dashboard/frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
+### Step 2: Configure environment variables in your host
 
-### Step 3: Add Environment Variables
+Set `VITE_API_BASE_URL` to your backend URL from Part 1.
 
-1. Expand **"Environment Variables"**
-2. Add this variable:
+### Step 3: Deploy
 
-| Name | Value |
-|------|-------|
-| `VITE_API_BASE_URL` | Your Render backend URL from Part 1 (e.g., `https://handwash-api.onrender.com`) |
-
-### Step 4: Deploy
-
-1. Click **"Deploy"**
-2. Wait 1-2 minutes for the build
-3. You'll get a URL like `your-project.vercel.app`
+Upload the `dist/` folder or connect your repo with these settings:
+- **Root Directory**: `dashboard/frontend`
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
 
 ---
 
-## Part 3: Connect Your .tech Domain (5 min)
+## Part 3: Connect Your Domain (provider-specific)
 
-### Step 1: Add Domain in Vercel
-
-1. In Vercel, go to your project
-2. Click **"Settings"** → **"Domains"**
-3. Enter your domain (e.g., `yourdomain.tech`)
-4. Click **"Add"**
-5. Vercel will show you the DNS records you need to add
-
-### Step 2: Configure DNS at Your Domain Registrar
-
-Go to where you bought your .tech domain (Namecheap, GoDaddy, Google Domains, etc.) and update DNS:
-
-**Option A: Use Vercel Nameservers (Recommended)**
-
-1. In Vercel, you'll see nameservers like:
-   - `ns1.vercel-dns.com`
-   - `ns2.vercel-dns.com`
-2. Go to your domain registrar's DNS settings
-3. Change nameservers to Vercel's nameservers
-4. Wait 10-30 minutes for DNS propagation
-
-**Option B: Add DNS Records Manually**
-
-Add these records at your domain registrar:
-
-| Type | Name | Value |
-|------|------|-------|
-| A | @ | `76.76.21.21` |
-| CNAME | www | `cname.vercel-dns.com` |
-
-### Step 3: Verify & Enable HTTPS
-
-1. Go back to Vercel **Settings** → **Domains**
-2. Wait for verification (green checkmark)
-3. Vercel automatically provides free SSL/HTTPS
+1. Add your domain in your frontend hosting provider's settings.
+2. Update DNS at your registrar using the records your provider supplies.
+3. Wait for DNS propagation, then verify HTTPS is enabled.
 
 ---
 
@@ -187,7 +144,7 @@ After you have your domain set up, update the backend to accept requests from it
 
 - [ ] Backend deployed on Render
 - [ ] PostgreSQL database connected
-- [ ] Frontend deployed on Vercel
+- [ ] Frontend deployed
 - [ ] .tech domain connected
 - [ ] HTTPS working (green lock icon)
 - [ ] CORS configured correctly
@@ -208,7 +165,7 @@ After you have your domain set up, update the backend to accept requests from it
 
 ### "Failed to fetch" or CORS errors
 - Check that `CORS_ORIGINS` in Render includes your exact domain with `https://`
-- Make sure `VITE_API_BASE_URL` in Vercel doesn't have a trailing slash
+- Make sure `VITE_API_BASE_URL` in your frontend host doesn't have a trailing slash
 
 ### Backend not starting
 - Check Render logs: Click on service → **"Logs"** tab
@@ -234,7 +191,7 @@ After you have your domain set up, update the backend to accept requests from it
 
 | Service | Cost |
 |---------|------|
-| Vercel Frontend | **Free** (hobby tier) |
+| Frontend hosting | Depends on provider |
 | Render Backend | **Free** (750 hours/month) |
 | Render PostgreSQL | **Free** (90 days, then $7/month) |
 | .tech Domain | Whatever you paid |
@@ -245,7 +202,7 @@ After you have your domain set up, update the backend to accept requests from it
 ## 🔄 Future Updates
 
 When you push code to GitHub:
-- **Frontend**: Vercel auto-deploys on every push
+- **Frontend**: your host may auto-deploy on every push (if connected)
 - **Backend**: Render auto-deploys on every push
 
 No manual action needed!
@@ -254,6 +211,5 @@ No manual action needed!
 
 ## 📞 Need Help?
 
-- Vercel Docs: https://vercel.com/docs
 - Render Docs: https://render.com/docs
 - Check the logs in each platform for error details

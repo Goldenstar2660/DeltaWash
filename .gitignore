@@ -124,8 +124,10 @@ Palm/
 recordings/
 scripts/
 lstm_model.pth
+!assets/models/lstm_model.pth
 pytest.ini
 test_cam.py
+!tools/pi/test_cam.py
 .specify/
 specs/
 training_data_old/

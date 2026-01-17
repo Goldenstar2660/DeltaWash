@@ -42,23 +42,23 @@ Location: `dashboard/backend/tests/integration/test_analytics_api.py`
 **From outside the container:**
 ```powershell
 cd "c:\Users\Derek Chen\Desktop\Derek\Projects\handwash"
-docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integration/ -v
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend pytest tests/integration/ -v
 ```
 
 **From inside the container:**
 ```bash
-docker compose -f docker-compose.dashboard.yml exec backend bash
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend bash
 pytest tests/integration/ -v
 ```
 
 **Run specific test class:**
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integration/test_analytics_api.py::TestUnitAnalytics -v
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend pytest tests/integration/test_analytics_api.py::TestUnitAnalytics -v
 ```
 
 **Run single test:**
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integration/test_analytics_api.py::TestUnitAnalytics::test_unit_analytics_org_admin -v
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend pytest tests/integration/test_analytics_api.py::TestUnitAnalytics::test_unit_analytics_org_admin -v
 ```
 
 ### Frontend Tests
@@ -73,7 +73,7 @@ npm test
 
 ### 1. Create Separate Test Database
 
-Update `docker-compose.dashboard.yml` to create a test database:
+Update `dashboard/docker-compose.dashboard.yml` to create a test database:
 
 ```yaml
 services:
@@ -145,17 +145,17 @@ Option B: Use pytest-postgresql plugin for automatic test database management
 
 **View detailed error output:**
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integration/ -v --tb=long
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend pytest tests/integration/ -v --tb=long
 ```
 
 **Stop on first failure:**
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integration/ -x
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend pytest tests/integration/ -x
 ```
 
 **Run with print statements:**
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integration/ -s
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend pytest tests/integration/ -s
 ```
 
 ## Next Steps
@@ -165,3 +165,6 @@ docker compose -f docker-compose.dashboard.yml exec backend pytest tests/integra
 3. **Run all tests** - Verify all 15 tests pass
 4. **Add frontend tests** - Write tests for React components
 5. **Set up CI/CD** - Automate test execution on pull requests
+
+
+

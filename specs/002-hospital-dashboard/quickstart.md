@@ -26,7 +26,7 @@ git checkout 002-hospital-dashboard
 
 ```bash
 # One-command startup
-docker-compose -f docker-compose.dashboard.yml up --build
+docker-compose -f dashboard/docker-compose.dashboard.yml up --build
 ```
 
 **What this does**:
@@ -109,7 +109,7 @@ Wipe all data and regenerate fresh demo data:
 
 ```bash
 # Run from repository root
-docker-compose -f docker-compose.dashboard.yml run --rm backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml run --rm backend \
   python -m src.scripts.seed_demo_data \
     --devices 25 \
     --days 14 \
@@ -134,7 +134,7 @@ docker-compose -f docker-compose.dashboard.yml run --rm backend \
 After bulk data ingestion, refresh aggregates:
 
 ```bash
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.refresh_views
 ```
 
@@ -142,14 +142,14 @@ docker-compose -f docker-compose.dashboard.yml exec backend \
 
 ```bash
 # Org Admin
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.create_user \
     --email analyst@demo.com \
     --password demo1234 \
     --role analyst
 
 # Unit Manager (requires unit_id)
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.create_user \
     --email icu-manager@demo.com \
     --password demo1234 \
@@ -161,23 +161,23 @@ docker-compose -f docker-compose.dashboard.yml exec backend \
 
 ```bash
 # All services
-docker-compose -f docker-compose.dashboard.yml logs -f
+docker-compose -f dashboard/docker-compose.dashboard.yml logs -f
 
 # Backend only
-docker-compose -f docker-compose.dashboard.yml logs -f backend
+docker-compose -f dashboard/docker-compose.dashboard.yml logs -f backend
 
 # Frontend only
-docker-compose -f docker-compose.dashboard.yml logs -f frontend
+docker-compose -f dashboard/docker-compose.dashboard.yml logs -f frontend
 ```
 
 ### Stop Services
 
 ```bash
 # Stop but keep data
-docker-compose -f docker-compose.dashboard.yml down
+docker-compose -f dashboard/docker-compose.dashboard.yml down
 
 # Stop and remove volumes (wipes data)
-docker-compose -f docker-compose.dashboard.yml down -v
+docker-compose -f dashboard/docker-compose.dashboard.yml down -v
 ```
 
 ---
@@ -246,7 +246,7 @@ dashboard:
 ### 2. Create Device Token
 
 ```bash
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.create_device_token \
     --device-id <device-uuid>
 ```
@@ -268,10 +268,10 @@ Run handwashing session on device → session appears in dashboard within 5 seco
 **Fix**:
 ```bash
 # Check if containers are running
-docker-compose -f docker-compose.dashboard.yml ps
+docker-compose -f dashboard/docker-compose.dashboard.yml ps
 
 # If not running, start them
-docker-compose -f docker-compose.dashboard.yml up
+docker-compose -f dashboard/docker-compose.dashboard.yml up
 ```
 
 ### No Data in Dashboard
@@ -281,7 +281,7 @@ docker-compose -f docker-compose.dashboard.yml up
 **Fix**:
 ```bash
 # Verify database has data
-docker-compose -f docker-compose.dashboard.yml exec db \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec db \
   psql -U dashboard -d dashboard_db -c "SELECT COUNT(*) FROM sessions;"
 
 # If count is 0, reseed data
@@ -295,11 +295,11 @@ docker-compose -f docker-compose.dashboard.yml exec db \
 **Fix**:
 ```bash
 # Refresh materialized views
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.refresh_views
 
 # Check view refresh timestamps
-docker-compose -f docker-compose.dashboard.yml exec db \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec db \
   psql -U dashboard -d dashboard_db -c \
     "SELECT schemaname, matviewname, last_refresh FROM pg_matviews;"
 ```
@@ -311,10 +311,10 @@ docker-compose -f docker-compose.dashboard.yml exec db \
 **Fix**:
 ```bash
 # Check if database is ready
-docker-compose -f docker-compose.dashboard.yml exec db pg_isready
+docker-compose -f dashboard/docker-compose.dashboard.yml exec db pg_isready
 
 # If not ready, wait 10 seconds and restart backend
-docker-compose -f docker-compose.dashboard.yml restart backend
+docker-compose -f dashboard/docker-compose.dashboard.yml restart backend
 ```
 
 ### Port Conflicts
@@ -327,7 +327,7 @@ docker-compose -f docker-compose.dashboard.yml restart backend
 lsof -ti:5173 | xargs kill
 lsof -ti:8000 | xargs kill
 
-# Or change ports in docker-compose.dashboard.yml
+# Or change ports in dashboard/docker-compose.dashboard.yml
 # frontend: ports: ["3000:5173"]
 # backend: ports: ["9000:8000"]
 ```
@@ -346,15 +346,15 @@ lsof -ti:8000 | xargs kill
 
 ```bash
 # Backend integration tests
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   pytest tests/integration/ -v
 
 # Backend unit tests
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   pytest tests/unit/ -v
 
 # Frontend unit tests
-docker-compose -f docker-compose.dashboard.yml exec frontend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec frontend \
   npm run test
 
 # Frontend smoke tests (requires dashboard running)
@@ -366,7 +366,7 @@ npx playwright test
 
 ```bash
 # psql shell
-docker-compose -f docker-compose.dashboard.yml exec db \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec db \
   psql -U dashboard -d dashboard_db
 
 # Example queries
@@ -445,3 +445,4 @@ If live demo fails:
 **Questions**: Contact team on Slack `#deltawash-dashboard`
 
 **Constitution**: All work must align with [.specify/memory/constitution.md](../../.specify/memory/constitution.md)
+

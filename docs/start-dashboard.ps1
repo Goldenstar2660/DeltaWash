@@ -12,11 +12,11 @@ Write-Host "`n1. Navigated to: $projectPath" -ForegroundColor Yellow
 
 # Stop existing containers
 Write-Host "`n2. Stopping existing containers..." -ForegroundColor Yellow
-docker compose -f docker-compose.dashboard.yml down -v --remove-orphans 2>$null
+docker compose -f dashboard/docker-compose.dashboard.yml down -v --remove-orphans 2>$null
 
 # Start services
 Write-Host "`n3. Starting services (this may take 30-60 seconds)..." -ForegroundColor Yellow
-docker compose -f docker-compose.dashboard.yml up -d --build
+docker compose -f dashboard/docker-compose.dashboard.yml up -d --build
 
 # Wait for initialization
 Write-Host "`n4. Waiting for services to initialize..." -ForegroundColor Yellow
@@ -24,7 +24,7 @@ Start-Sleep -Seconds 30
 
 # Check service status
 Write-Host "`n5. Checking service status..." -ForegroundColor Yellow
-docker compose -f docker-compose.dashboard.yml ps
+docker compose -f dashboard/docker-compose.dashboard.yml ps
 
 # Test API
 Write-Host "`n6. Testing API connection..." -ForegroundColor Yellow
@@ -54,7 +54,7 @@ try {
 } catch {
     Write-Host "`n❌ API test failed: $_" -ForegroundColor Red
     Write-Host "`nCheck logs with:" -ForegroundColor Yellow
-    Write-Host "  docker compose -f docker-compose.dashboard.yml logs backend" -ForegroundColor Yellow
+    Write-Host "  docker compose -f dashboard/docker-compose.dashboard.yml logs backend" -ForegroundColor Yellow
 }
 
 # Test Frontend
@@ -78,7 +78,10 @@ Write-Host "   Email: admin@hospital.com" -ForegroundColor Gray
 Write-Host "   Password: admin123" -ForegroundColor Gray
 Write-Host "`n===========================================================" -ForegroundColor Cyan
 Write-Host "`nUseful commands:" -ForegroundColor Yellow
-Write-Host "  View logs:    docker compose -f docker-compose.dashboard.yml logs -f" -ForegroundColor Gray
-Write-Host "  Stop:         docker compose -f docker-compose.dashboard.yml down" -ForegroundColor Gray
-Write-Host "  Restart:      docker compose -f docker-compose.dashboard.yml restart" -ForegroundColor Gray
+Write-Host "  View logs:    docker compose -f dashboard/docker-compose.dashboard.yml logs -f" -ForegroundColor Gray
+Write-Host "  Stop:         docker compose -f dashboard/docker-compose.dashboard.yml down" -ForegroundColor Gray
+Write-Host "  Restart:      docker compose -f dashboard/docker-compose.dashboard.yml restart" -ForegroundColor Gray
 Write-Host "===========================================================" -ForegroundColor Cyan
+
+
+

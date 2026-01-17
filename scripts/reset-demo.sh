@@ -17,18 +17,18 @@ cd "$PROJECT_ROOT"
 
 # Step 1: Stop and remove all containers and volumes
 echo "Step 1: Stopping and removing containers and volumes..."
-docker compose -f docker-compose.dashboard.yml down -v
+docker compose -f dashboard/docker-compose.dashboard.yml down -v
 echo "✅ Containers and volumes removed"
 echo ""
 
 # Step 2: Start only the database
 echo "Step 2: Starting database container..."
-docker compose -f docker-compose.dashboard.yml up -d db
+docker compose -f dashboard/docker-compose.dashboard.yml up -d db
 echo "Waiting for database to be ready..."
 
 # Wait for database to be healthy
 for i in {1..30}; do
-  if docker compose -f docker-compose.dashboard.yml exec -T db pg_isready -U dashboard_user > /dev/null 2>&1; then
+  if docker compose -f dashboard/docker-compose.dashboard.yml exec -T db pg_isready -U dashboard_user > /dev/null 2>&1; then
     echo "✅ Database is ready"
     break
   fi
@@ -45,25 +45,25 @@ echo ""
 
 # Step 3: Run migrations
 echo "Step 3: Running database migrations..."
-docker compose -f docker-compose.dashboard.yml run --rm backend python src/scripts/init_db.py
+docker compose -f dashboard/docker-compose.dashboard.yml run --rm backend python src/scripts/init_db.py
 echo "✅ Migrations completed"
 echo ""
 
 # Step 4: Seed demo data with deterministic seed
 echo "Step 4: Seeding demo data (seed=42)..."
-docker compose -f docker-compose.dashboard.yml run --rm backend python src/scripts/seed_demo_data.py --seed 42
+docker compose -f dashboard/docker-compose.dashboard.yml run --rm backend python src/scripts/seed_demo_data.py --seed 42
 echo "✅ Demo data seeded"
 echo ""
 
 # Step 5: Refresh materialized views
 echo "Step 5: Refreshing materialized views..."
-docker compose -f docker-compose.dashboard.yml run --rm backend python src/scripts/refresh_views.py
+docker compose -f dashboard/docker-compose.dashboard.yml run --rm backend python src/scripts/refresh_views.py
 echo "✅ Materialized views refreshed"
 echo ""
 
 # Step 6: Start backend and frontend
 echo "Step 6: Starting backend and frontend services..."
-docker compose -f docker-compose.dashboard.yml up -d backend frontend
+docker compose -f dashboard/docker-compose.dashboard.yml up -d backend frontend
 echo "✅ Services started"
 echo ""
 
@@ -90,9 +90,10 @@ echo "  - ~6,720 steps (6 steps per session)"
 echo "  - Deterministic seed (42) for reproducible data"
 echo ""
 echo "To view logs:"
-echo "  docker compose -f docker-compose.dashboard.yml logs -f backend"
-echo "  docker compose -f docker-compose.dashboard.yml logs -f frontend"
+echo "  docker compose -f dashboard/docker-compose.dashboard.yml logs -f backend"
+echo "  docker compose -f dashboard/docker-compose.dashboard.yml logs -f frontend"
 echo ""
 echo "To stop services:"
-echo "  docker compose -f docker-compose.dashboard.yml down"
+echo "  docker compose -f dashboard/docker-compose.dashboard.yml down"
 echo ""
+

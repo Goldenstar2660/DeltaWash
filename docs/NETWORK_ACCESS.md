@@ -12,7 +12,7 @@ VITE_API_BASE_URL=http://172.20.10.3:8000
 ```
 
 ### 2. Docker Compose Updates
-Updated `docker-compose.dashboard.yml`:
+Updated `dashboard/docker-compose.dashboard.yml`:
 - Frontend now defaults to `http://172.20.10.3:8000` instead of `localhost:8000`
 - Backend CORS now includes `http://172.20.10.3:5173` for network access
 
@@ -49,7 +49,7 @@ If the IP address changes (different network, DHCP reassignment):
 
 3. Restart containers:
    ```bash
-   docker compose -f docker-compose.dashboard.yml restart frontend backend
+   docker compose -f dashboard/docker-compose.dashboard.yml restart frontend backend
    ```
 
 ## Testing
@@ -57,3 +57,6 @@ If the IP address changes (different network, DHCP reassignment):
 1. Hard refresh your browser: `Ctrl+Shift+R` (or `Cmd+Shift+R` on Mac)
 2. Open browser console (F12) to check for errors
 3. Network tab should show requests going to `172.20.10.3:8000` instead of `localhost:8000`
+
+
+

@@ -9,16 +9,16 @@ Run these commands in PowerShell from the project root directory:
 cd "C:\Users\Derek Chen\Desktop\Derek\Projects\handwash"
 
 # 2. Stop any existing containers and clean up
-docker compose -f docker-compose.dashboard.yml down -v --remove-orphans
+docker compose -f dashboard/docker-compose.dashboard.yml down -v --remove-orphans
 
 # 3. Build and start all services (database, backend, frontend)
-docker compose -f docker-compose.dashboard.yml up -d --build
+docker compose -f dashboard/docker-compose.dashboard.yml up -d --build
 
 # 4. Wait 30 seconds for initialization (database migrations, demo data seeding)
 Start-Sleep -Seconds 30
 
 # 5. Check logs to verify everything started
-docker compose -f docker-compose.dashboard.yml logs --tail=50
+docker compose -f dashboard/docker-compose.dashboard.yml logs --tail=50
 ```
 
 ## Access the Dashboard
@@ -38,16 +38,16 @@ Once containers are running:
 
 ```powershell
 # Stop everything and remove volumes
-docker compose -f docker-compose.dashboard.yml down -v
+docker compose -f dashboard/docker-compose.dashboard.yml down -v
 
 # Rebuild from scratch
-docker compose -f docker-compose.dashboard.yml up -d --build
+docker compose -f dashboard/docker-compose.dashboard.yml up -d --build
 
 # Wait for initialization
 Start-Sleep -Seconds 30
 
 # Check backend logs
-docker compose -f docker-compose.dashboard.yml logs backend
+docker compose -f dashboard/docker-compose.dashboard.yml logs backend
 ```
 
 ### If you get 403 Forbidden error:
@@ -55,19 +55,19 @@ docker compose -f docker-compose.dashboard.yml logs backend
 This usually means the demo user wasn't created. Check backend logs:
 
 ```powershell
-docker compose -f docker-compose.dashboard.yml logs backend | Select-String "Creating user"
+docker compose -f dashboard/docker-compose.dashboard.yml logs backend | Select-String "Creating user"
 ```
 
 If you don't see "Creating user", manually create the admin user:
 
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend python src/scripts/create_user.py --email admin@hospital.com --password admin123 --role org_admin
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend python src/scripts/create_user.py --email admin@hospital.com --password admin123 --role org_admin
 ```
 
 ### Check if services are running:
 
 ```powershell
-docker compose -f docker-compose.dashboard.yml ps
+docker compose -f dashboard/docker-compose.dashboard.yml ps
 ```
 
 You should see 3 services:
@@ -79,29 +79,29 @@ You should see 3 services:
 
 ```powershell
 # Database logs
-docker compose -f docker-compose.dashboard.yml logs db
+docker compose -f dashboard/docker-compose.dashboard.yml logs db
 
 # Backend logs
-docker compose -f docker-compose.dashboard.yml logs backend
+docker compose -f dashboard/docker-compose.dashboard.yml logs backend
 
 # Frontend logs
-docker compose -f docker-compose.dashboard.yml logs frontend
+docker compose -f dashboard/docker-compose.dashboard.yml logs frontend
 ```
 
 ### Restart a single service:
 
 ```powershell
-docker compose -f docker-compose.dashboard.yml restart backend
+docker compose -f dashboard/docker-compose.dashboard.yml restart backend
 ```
 
 ### Access container shell:
 
 ```powershell
 # Backend shell
-docker compose -f docker-compose.dashboard.yml exec backend bash
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend bash
 
 # Database shell
-docker compose -f docker-compose.dashboard.yml exec db psql -U dashboard_user -d deltawash_dashboard
+docker compose -f dashboard/docker-compose.dashboard.yml exec db psql -U dashboard_user -d deltawash_dashboard
 ```
 
 ## Complete Cleanup and Rebuild
@@ -110,7 +110,7 @@ If everything is broken, start completely fresh:
 
 ```powershell
 # 1. Stop all containers
-docker compose -f docker-compose.dashboard.yml down -v --remove-orphans
+docker compose -f dashboard/docker-compose.dashboard.yml down -v --remove-orphans
 
 # 2. Remove all dashboard images
 docker images | Select-String "dashboard" | ForEach-Object { docker rmi -f ($_ -split '\s+')[2] }
@@ -119,7 +119,7 @@ docker images | Select-String "dashboard" | ForEach-Object { docker rmi -f ($_ -
 docker system prune -f
 
 # 4. Rebuild everything
-docker compose -f docker-compose.dashboard.yml up -d --build
+docker compose -f dashboard/docker-compose.dashboard.yml up -d --build
 
 # 5. Wait for initialization
 Start-Sleep -Seconds 45
@@ -137,7 +137,7 @@ Check if demo data was loaded:
 
 ```powershell
 # Check session count
-docker compose -f docker-compose.dashboard.yml exec db psql -U dashboard_user -d deltawash_dashboard -c "SELECT COUNT(*) FROM sessions;"
+docker compose -f dashboard/docker-compose.dashboard.yml exec db psql -U dashboard_user -d deltawash_dashboard -c "SELECT COUNT(*) FROM sessions;"
 
 # Should show 1024 sessions
 ```
@@ -182,7 +182,7 @@ Write-Host "Total Devices: $($analytics.device_summary.total_devices)"
 # Just edit files in dashboard/backend/src/
 
 # If you need to restart:
-docker compose -f docker-compose.dashboard.yml restart backend
+docker compose -f dashboard/docker-compose.dashboard.yml restart backend
 ```
 
 ### For frontend changes:
@@ -191,17 +191,17 @@ docker compose -f docker-compose.dashboard.yml restart backend
 # Just edit files in dashboard/frontend/src/
 
 # If you need to restart:
-docker compose -f docker-compose.dashboard.yml restart frontend
+docker compose -f dashboard/docker-compose.dashboard.yml restart frontend
 ```
 
 ### Run database migrations:
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend alembic upgrade head
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend alembic upgrade head
 ```
 
 ### Refresh materialized views:
 ```powershell
-docker compose -f docker-compose.dashboard.yml exec backend python src/scripts/refresh_views.py
+docker compose -f dashboard/docker-compose.dashboard.yml exec backend python src/scripts/refresh_views.py
 ```
 
 ## Architecture Overview
@@ -242,3 +242,6 @@ After successful startup:
 2. Explore the compliance overview dashboard
 3. Check out the API docs at http://localhost:8000/docs
 4. Review the Phase 5 summary at `specs/002-hospital-dashboard/PHASE5_SUMMARY.md`
+
+
+

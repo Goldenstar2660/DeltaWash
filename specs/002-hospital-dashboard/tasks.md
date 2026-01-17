@@ -29,7 +29,7 @@ T### = Sequential task ID
 - [X] T003 [P] Create backend Dockerfile with Python 3.11 base image, install dependencies, expose port 8000
 - [X] T004 [P] Create frontend package.json with React 18, TypeScript, Vite, React Query, Recharts, Axios, React Router
 - [X] T005 [P] Create frontend Dockerfile with Node 20 base image, install dependencies, expose port 5173
-- [X] T006 Create docker-compose.dashboard.yml with 3 services: db (PostgreSQL 16), backend (FastAPI), frontend (Vite)
+- [X] T006 Create dashboard/docker-compose.dashboard.yml with 3 services: db (PostgreSQL 16), backend (FastAPI), frontend (Vite)
 - [X] T007 Create .env.example with DATABASE_URL, JWT_SECRET, CORS_ORIGINS, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
 - [X] T008 [P] Create backend config.py to load environment variables and validate configuration
 - [X] T009 [P] Create backend database.py with SQLAlchemy engine, session factory, and Base declarative class
@@ -106,7 +106,7 @@ T### = Sequential task ID
 - [X] T035 [US4] Implement bulk insert optimization in seed_demo_data.py using SQLAlchemy bulk_insert_mappings for performance
 - [X] T036 [US4] Add summary logging in seed_demo_data.py to report units_created, devices_created, sessions_created, steps_created, heartbeats_created, date_range
 - [X] T037 [US4] Create materialized view refresh script in dashboard/backend/src/scripts/refresh_views.py to run REFRESH MATERIALIZED VIEW CONCURRENTLY for all 3 views
-- [X] T038 [US4] Update docker-compose.dashboard.yml to auto-run seed_demo_data.py on first startup (entrypoint script)
+- [X] T038 [US4] Update dashboard/docker-compose.dashboard.yml to auto-run seed_demo_data.py on first startup (entrypoint script)
 - [X] T039 [US4] Create reset-demo.sh script in scripts/ to: docker-compose down -v, docker-compose up -d db, run init_db.py, run seed_demo_data.py --seed 42, docker-compose up backend frontend
 
 **Parallel Opportunities**:
@@ -357,7 +357,7 @@ T### = Sequential task ID
 - [ ] T143 [P] Add backend logging configuration in main.py with structured logs (JSON format) for production
 - [ ] T144 [P] Add API request logging middleware in main.py to log all requests with duration, status code, path
 - [ ] T145 Add health check endpoint GET /health in main.py that checks database connection
-- [ ] T146 Update docker-compose.dashboard.yml to add health checks for backend (GET /health) and db (pg_isready)
+- [ ] T146 Update dashboard/docker-compose.dashboard.yml to add health checks for backend (GET /health) and db (pg_isready)
 - [ ] T147 Create start-dashboard.sh script in scripts/ with docker-compose up --build command
 - [ ] T148 Update README.md in repository root with dashboard quickstart instructions (link to quickstart.md)
 
@@ -560,3 +560,4 @@ npx playwright test
 5. ✅ Begin Phase 1: Setup & Infrastructure
 
 **Ready to implement**: All tasks have clear file paths, acceptance criteria, and dependencies documented.
+

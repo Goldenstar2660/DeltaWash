@@ -39,7 +39,7 @@ src/deltawash_pi/
 │   ├── sessions.py   # Per-session records
 │   └── aggregates.py # Compliance analytics
 └── ml/               # ML models
-    ├── lstm_model.pth
+    ├── cnn_model.pth
     ├── pose_model.pth
     └── pixel_model.pth
 
@@ -118,7 +118,7 @@ dashboard/
 │   ├── vite.config.ts
 │   └── Dockerfile
 │
-└── docker-compose.dashboard.yml  # Orchestrate db + backend + frontend
+└── dashboard/docker-compose.dashboard.yml  # Orchestrate db + backend + frontend
 
 # Scripts
 scripts/
@@ -159,40 +159,40 @@ pytest tests/smoke/
 
 ```bash
 # Start dashboard stack (one command)
-docker-compose -f docker-compose.dashboard.yml up --build
+docker-compose -f dashboard/docker-compose.dashboard.yml up --build
 
 # Reset demo data
 ./scripts/reset-demo.sh
 
 # Generate custom demo data
-docker-compose -f docker-compose.dashboard.yml run --rm backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml run --rm backend \
   python -m src.scripts.seed_demo_data --devices 25 --days 14 --seed 99
 
 # Create dashboard user
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.create_user --email user@demo.com --password demo1234 --role org_admin
 
 # Run backend tests
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   pytest tests/integration/ -v
 
 # Run frontend tests
-docker-compose -f docker-compose.dashboard.yml exec frontend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec frontend \
   npm run test
 
 # Refresh materialized views
-docker-compose -f docker-compose.dashboard.yml exec backend \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec backend \
   python -m src.scripts.refresh_views
 
 # Access database
-docker-compose -f docker-compose.dashboard.yml exec db \
+docker-compose -f dashboard/docker-compose.dashboard.yml exec db \
   psql -U dashboard -d dashboard_db
 
 # Stop services (keep data)
-docker-compose -f docker-compose.dashboard.yml down
+docker-compose -f dashboard/docker-compose.dashboard.yml down
 
 # Stop services (wipe data)
-docker-compose -f docker-compose.dashboard.yml down -v
+docker-compose -f dashboard/docker-compose.dashboard.yml down -v
 ```
 
 ## Code Style
@@ -371,3 +371,4 @@ CREATE INDEX idx_sessions_device_timestamp ON sessions(device_id, timestamp DESC
 <!-- MANUAL ADDITIONS START -->
 <!-- Add project-specific notes, workarounds, or exceptions here -->
 <!-- MANUAL ADDITIONS END -->
+

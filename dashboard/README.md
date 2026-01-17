@@ -55,20 +55,20 @@ http://172.20.10.3:8000/docs
 ### Start the Stack
 
 ```bash
-docker compose -f docker-compose.dashboard.yml up -d
+docker compose -f dashboard/docker-compose.dashboard.yml up -d
 ```
 
 ### Stop the Stack
 
 ```bash
-docker compose -f docker-compose.dashboard.yml down
+docker compose -f dashboard/docker-compose.dashboard.yml down
 ```
 
 ### View Logs
 
 ```bash
 # All services
-docker compose -f docker-compose.dashboard.yml logs -f
+docker compose -f dashboard/docker-compose.dashboard.yml logs -f
 
 # Specific service
 docker logs deltawash-dashboard-frontend -f
@@ -156,7 +156,7 @@ The REST API is available at `http://172.20.10.3:8000/api/v1/`
 VITE_API_BASE_URL=http://172.20.10.3:8000
 ```
 
-**Backend** (set in `docker-compose.dashboard.yml`):
+**Backend** (set in `dashboard/docker-compose.dashboard.yml`):
 ```bash
 DATABASE_URL=postgresql://user:password@db:5432/deltawash_dashboard
 CORS_ORIGINS=*  # Allow all origins for demo
@@ -171,7 +171,7 @@ CORS_ORIGINS=*  # Allow all origins for demo
 
 ### API returns 403 Forbidden
 - Authentication has been disabled for demo
-- If you see 403 errors, restart the backend: `docker compose -f docker-compose.dashboard.yml restart backend`
+- If you see 403 errors, restart the backend: `docker compose -f dashboard/docker-compose.dashboard.yml restart backend`
 
 ### Frontend shows network errors
 1. Check API URL in browser console
@@ -182,7 +182,7 @@ CORS_ORIGINS=*  # Allow all origins for demo
 If the Pi's IP changes:
 1. Get new IP: `hostname -I`
 2. Update `.env` file with new IP
-3. Restart containers: `docker compose -f docker-compose.dashboard.yml restart`
+3. Restart containers: `docker compose -f dashboard/docker-compose.dashboard.yml restart`
 
 ## 📝 License
 
@@ -191,3 +191,6 @@ Part of the DeltaWash Compliance System project.
 ---
 
 **Built for hackathon demonstration** | Last updated: January 10, 2026
+
+
+
